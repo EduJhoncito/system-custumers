@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>clientes-Gestion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css')}}">
+    <script src="{{ url_for('static', filename='js/script.js')}}"></script>
+</head>
+<body>
+    <h1>Sistema de Gestión-clientes</h1>
+
+    <a href="#" class="myButton-add" onclick="agregar()" >Agregar Cliente</a>
+
+    <table id="customers">
+        <thead>
+            <tr>
+                <th><a href="#" onclick="ordenar()">Nombre</a><img id="filter-name" onclick="filtroNombre()" src="{{ url_for('static', filename='img/filtro.jpg')}}"/></th>
+                <th>Apellido</th>
+                <th>Teléfono</th>
+                <th><p>Tipo de evento</p><img id="filter-type-events" onclick="filtroTipoEvento()" src="{{ url_for('static', filename='img/filtro.jpg')}}"></th>
+                <th>Dia del evento</th>
+                <th><p>Mes del evento</p><img id="filter-date-events" onclick="filtroMesEvento()" src="{{ url_for('static', filename='img/filtro.jpg')}}"></th>
+                <th>Dirección casa</th>
+                <th><p>Dirección evento</p><img id="filter-location-events" onclick="filtroUbicacionEvento()" src="{{ url_for('static', filename='img/filtro.jpg')}}"></th>
+                <th>Dia del cumpleaños</th>
+                <th><p>Mes cumpleaños</p><img id="filter-date-birthday" onclick="filtroMesCumpleanos()" src="{{ url_for('static', filename='img/filtro.jpg')}}"></th>
+                <th>Observaciones</th>
+                <th>Correo electrónico</th>
+
+            </tr>
+        </thead>
+        <tbody id="cuerpo">
+
+        </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div id="modal" class="modale" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2>Datos del cliente</h2>
+          <a onclick="cerrarModal()" href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div>
+
+        <div class="modal-body">
+          <input id="txtId" type="hidden" placeholder="ID" size="20"/><br>
+          <input id="txtNombre" type="text" placeholder="Nombre" size="20" maxlength="30"/><br>
+          <input id="txtApellido" type="text" placeholder="Apellido" size="20" maxlength="30"/><br>
+          <input id="txtTelefono" type="text" placeholder="Telefono" size="20" maxlength="30"/><br>
+          <input id="txtTipo_evento" type="text" placeholder="Tipo_evento" size="20" maxlength="30"/><br>
+          <input id="txtDia_evento" type="text" placeholder="Dia_evento" size="20" maxlength="30"/><br>
+          <input id="txtMes_evento" type="text" placeholder="Mes_evento" size="20" maxlength="30"/><br>
+          <input id="txtDireccion_casa" type="text" placeholder="Direccion_casa" size="20" maxlength="500"/><br>
+          <input id="txtDireccion_evento" type="text" placeholder="Direccion_evento" size="20" maxlength="500"/><br>
+          <input id="txtDia_cumpleaños" type="text" placeholder="Dia_cumpleaños" size="20" maxlength="30"/><br>
+          <input id="txtMes_cumpleaños" type="text" placeholder="Mes_cumpleaños" size="20" maxlength="30"/><br>
+          <input id="txtObservaciones" type="text" placeholder="Observaciones" size="20" maxlength="1000"/><br>
+          <input id="txtCorreo_electronico" type="text" placeholder="Correo_electronico" size="30" maxlength="50"/><br>
+        </div>
+
+        <div class="modal-footer">
+          <a href="#" class="btn" id="btn_ingresar" onclick="save()">Guardar</a>
+        </div>
+      </div>
+    </div>
+    <!-- /Modal -->
+
+    <!-- Modal -->
+    <div id="modal_name" class="modale_name" aria-hidden="true">
+      <div class="modal_name-dialog">
+        <div class="modal_name-header">
+          <h2>Filtre por nombre</h2>
+          <a onclick="cerrarModalNombre()" href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div>
+
+        <div class="modal_name-body">
+          <input id="txtFiltroNombre" type="text" placeholder="Nombre" size="20" maxlength="30"/><br>
+        </div>
+
+        <div class="modal_name-footer">
+          <a href="#" class="btn" id="btn_ingresar" onclick="saveNombre()">Filtrar</a>
+        </div>
+      </div>
+    </div>
+    <!-- /Modal -->
+
+    <!-- Modal -->
+    <div id="modal_event_type" class="modale_event_type" aria-hidden="true">
+      <div class="modal_event_type-dialog">
+        <div class="modal_event_type-header">
+          <h2>Filtre por tipo de evento</h2>
+          <a onclick="cerrarModalTipoEvento()" href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div>
+
+        <div class="modal_event_type-body">
+          <input id="txtFiltroEventoTipo" type="text" placeholder="Evento_tipo" size="20" maxlength="30"/><br>
+        </div>
+
+        <div class="modal_event_type-footer">
+          <a href="#" class="btn" id="btn_ingresar" onclick="saveTipoEvento()">Filtrar</a>
+        </div>
+      </div>
+    </div>
+    <!-- /Modal -->
+
+    <!-- Modal -->
+    <div id="modal_event_date" class="modale_event_date" aria-hidden="true">
+      <div class="modal_event_date-dialog">
+        <div class="modal_event_date-header">
+          <h2>Filtre por fecha evento</h2>
+          <a onclick="cerrarModalEventoFecha()" href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div>
+
+        <div class="modal_event_date-body">
+          <input id="txtFiltroEventoFecha" type="text" placeholder="Evento_fecha" size="20" maxlength="30"/><br>
+        </div>
+
+        <div class="modal_event_date-footer">
+          <a href="#" class="btn" id="btn_ingresar" onclick="saveEventoFecha()">Filtrar</a>
+        </div>
+      </div>
+    </div>
+    <!-- /Modal -->
+
+    <!-- Modal -->
+    <div id="modal_event_birthday" class="modale_event_birthday" aria-hidden="true">
+      <div class="modal_event_birthday-dialog">
+        <div class="modal_event_birthday-header">
+          <h2>Filtre por fecha de cumpleños</h2>
+          <a onclick="cerrarModalCumpleanofecha()" href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div>
+
+        <div class="modal_event_birthday-body">
+          <input id="txtFiltroCumpleanoFecha" type="text" placeholder="Cumpleaños_fecha" size="20" maxlength="30"/><br>
+        </div>
+
+        <div class="modal_event_birthday-footer">
+          <a href="#" class="btn" id="btn_ingresar" onclick="saveCumpleanoFecha()">Filtrar</a>
+        </div>
+      </div>
+    </div>
+    <!-- /Modal -->
+
+
+    <!-- Modal -->
+    <div id="modal_location_events" class="modale_location_events" aria-hidden="true">
+      <div class="modal_location_events-dialog">
+        <div class="modal_location_events-header">
+          <h2>Filtre por ubicacion del evento</h2>
+          <a onclick="cerrarModalEventoUbicacion()" href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div>
+
+        <div class="modal_location_events-body">
+          <input id="txtFiltroEventoUbicacion" type="text" placeholder="Evento_Ubicacion" size="20" maxlength="30"/><br>
+        </div>
+
+        <div class="modal_location_events-footer">
+          <a href="#" class="btn" id="btn_ingresar" onclick="saveEventoUbicacion()">Filtrar</a>
+        </div>
+      </div>
+    </div>
+    <!-- /Modal -->
+</body>
+</html>
